@@ -1,9 +1,46 @@
-class LLMService:
+import os
 
-    @staticmethod
-    def generate_reply(message: str) -> str:
-        return (
-            f"You said: '{message}'. "
-            "This is a mock AI response. "
-            "Later this will come from Gemini."
-        )
+from dotenv import load_dotenv
+from google import genai
+
+load_dotenv()
+
+
+class LLMService:
+    def __init__(self):
+        api_key = os.getenv("GEMINI_API_KEY")
+
+        if not api_key:
+            raise ValueError("GEMINI_API_KEY not found.")
+
+        self.client = genai.Client(api_key=api_key)
+
+    def generate_reply(self, message: str) -> str:
+        try:
+            response = self.client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=f"""
+You are CareerPilot AI.
+
+You are a professional career mentor.
+
+Help users with:
+- Career guidance
+- Resume improvement
+- Interview preparation
+- DSA roadmap
+- Software engineering
+- College placements
+- Motivation
+
+Be practical, concise and encouraging.
+
+User:
+{message}
+""",
+            )
+
+            return response.text
+
+        except Exception as e:
+            return f"Gemini Error: {str(e)}"

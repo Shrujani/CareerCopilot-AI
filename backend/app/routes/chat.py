@@ -8,6 +8,8 @@ router = APIRouter(
     tags=["Chat"],
 )
 
+llm_service = LLMService()
+
 
 @router.post(
     "",
@@ -15,8 +17,6 @@ router = APIRouter(
 )
 def chat(request: ChatRequest):
 
-    reply = LLMService.generate_reply(request.message)
+    reply = llm_service.generate_reply(request.message)
 
-    return ChatResponse(
-        reply=reply
-    )
+    return ChatResponse(reply=reply)
