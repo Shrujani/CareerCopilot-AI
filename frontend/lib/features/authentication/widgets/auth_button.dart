@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 
-class NextButton extends StatelessWidget {
+class AuthButton extends StatelessWidget {
+  final String text;
   final VoidCallback onPressed;
-  final bool isLastPage;
 
-  const NextButton({
-    super.key,
-    required this.onPressed,
-    required this.isLastPage,
-  });
+  const AuthButton({super.key, required this.text, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +14,7 @@ class NextButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         child: Text(
-          isLastPage ? 'Get Started' : 'Next',
+          text,
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),

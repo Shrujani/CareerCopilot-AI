@@ -17,8 +17,12 @@ class CareerPilotApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'CareerPilot AI',
       theme: AppTheme.lightTheme,
+
+      // Initial screen
       initialRoute: AppRoutes.welcome,
-      routes: AppRouter.routes,
+
+      // Route generator
+      onGenerateRoute: AppRouter.generateRoute,
     );
   }
 }

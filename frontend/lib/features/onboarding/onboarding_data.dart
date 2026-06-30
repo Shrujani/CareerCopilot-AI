@@ -1,7 +1,6 @@
 import 'models/onboarding_page_model.dart';
 
 const List<OnboardingPageModel> onboardingPages = [
-
   OnboardingPageModel(
     title: 'Discover Your Career',
     description:

@@ -10,19 +10,14 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('CareerPilot AI'),
-      ),
+      appBar: AppBar(title: const Text('CareerPilot AI')),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.psychology,
-                size: 80,
-              ),
+              const Icon(Icons.psychology, size: 80),
               const SizedBox(height: 20),
 
               const Text(
@@ -44,10 +39,7 @@ class WelcomeScreen extends StatelessWidget {
               AppButton(
                 text: 'Get Started',
                 onPressed: () {
-                  Navigator.pushNamed(
-                    context,
-                    AppRoutes.onboarding,
-                  );
+                  Navigator.pushNamed(context, AppRoutes.onboarding);
                 },
               ),
             ],

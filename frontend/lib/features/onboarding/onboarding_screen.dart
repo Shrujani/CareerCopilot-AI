@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/routes/app_routes.dart';
 import 'onboarding_data.dart';
 import 'onboarding_page.dart';
 import 'widgets/next_button.dart';
@@ -28,7 +29,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   void _nextPage() {
     if (isLastPage) {
-      Navigator.pop(context);
+      Navigator.pushReplacementNamed(context, AppRoutes.login);
       return;
     }
 
@@ -45,14 +46,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          if (!isLastPage)
-            SkipButton(
-              onPressed: _skip,
-            ),
-        ],
-      ),
+      appBar: AppBar(actions: [if (!isLastPage) SkipButton(onPressed: _skip)]),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -67,24 +61,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   });
                 },
                 itemBuilder: (context, index) {
-                  return OnboardingPage(
-                    page: onboardingPages[index],
-                  );
+                  return OnboardingPage(page: onboardingPages[index]);
                 },
               ),
             ),
-
             PageIndicator(
               controller: _pageController,
               count: onboardingPages.length,
             ),
-
             const SizedBox(height: 30),
-
-            NextButton(
-              isLastPage: isLastPage,
-              onPressed: _nextPage,
-            ),
+            NextButton(isLastPage: isLastPage, onPressed: _nextPage),
           ],
         ),
       ),
