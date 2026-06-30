@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../services/chat_service.dart';
 import 'models/chat_message.dart';
 import 'widgets/chat_bubble.dart';
 import 'widgets/message_input.dart';
@@ -14,17 +15,20 @@ class AiChatScreen extends StatefulWidget {
 
 class _AiChatScreenState extends State<AiChatScreen> {
   final TextEditingController _controller = TextEditingController();
+  final ChatService _chatService = ChatService();
+
+  bool _isLoading = false;
 
   final List<ChatMessage> _messages = [
-     ChatMessage(
+    ChatMessage(
       message: "Hi 👋 I'm CareerPilot AI. How can I help you today?",
       sender: MessageSender.ai,
       timestamp: DateTime.now(),
     ),
   ];
 
-  void _sendMessage(String text) {
-    if (text.trim().isEmpty) return;
+  Future<void> _sendMessage(String text) async {
+    if (text.trim().isEmpty || _isLoading) return;
 
     setState(() {
       _messages.add(
@@ -35,32 +39,26 @@ class _AiChatScreenState extends State<AiChatScreen> {
         ),
       );
 
-      // Fake AI response
+      _isLoading = true;
+    });
+
+    _controller.clear();
+
+    final reply = await _chatService.sendMessage(text);
+
+    if (!mounted) return;
+
+    setState(() {
       _messages.add(
         ChatMessage(
-          message: _generateResponse(text),
+          message: reply,
           sender: MessageSender.ai,
           timestamp: DateTime.now(),
         ),
       );
+
+      _isLoading = false;
     });
-
-    _controller.clear();
-  }
-
-  String _generateResponse(String input) {
-    final text = input.toLowerCase();
-
-    if (text.contains("resume")) {
-      return "I can help you improve your resume. Upload it later and I'll analyze it!";
-    } else if (text.contains("interview")) {
-      return "Let's prepare for interviews. I can ask you mock questions.";
-    } else if (text.contains("roadmap") ||
-        text.contains("career")) {
-      return "I can create a personalized career roadmap for you.";
-    }
-
-    return "Got it! I'll help you with that. Can you give more details?";
   }
 
   @override
@@ -80,7 +78,6 @@ class _AiChatScreenState extends State<AiChatScreen> {
         children: [
           const SizedBox(height: 10),
 
-          // Suggestions
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -106,18 +103,33 @@ class _AiChatScreenState extends State<AiChatScreen> {
 
           const SizedBox(height: 10),
 
-          // Chat messages
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.all(12),
-              itemCount: _messages.length,
+              itemCount: _messages.length + (_isLoading ? 1 : 0),
               itemBuilder: (context, index) {
+                if (_isLoading && index == _messages.length) {
+                  return const Padding(
+                    padding: EdgeInsets.all(12),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                        SizedBox(width: 12),
+                        Text("CareerPilot AI is thinking..."),
+                      ],
+                    ),
+                  );
+                }
+
                 return ChatBubble(message: _messages[index]);
               },
             ),
           ),
 
-          // Input
           MessageInput(
             controller: _controller,
             onSend: () => _sendMessage(_controller.text),
