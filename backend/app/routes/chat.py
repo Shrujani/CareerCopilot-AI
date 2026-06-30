@@ -11,12 +11,15 @@ router = APIRouter(
 llm_service = LLMService()
 
 
-@router.post(
-    "",
-    response_model=ChatResponse,
-)
+@router.post("", response_model=ChatResponse)
 def chat(request: ChatRequest):
 
     reply = llm_service.generate_reply(request.message)
 
     return ChatResponse(reply=reply)
+
+
+@router.delete("/history")
+def clear_history():
+
+    llm_service.clear_history()

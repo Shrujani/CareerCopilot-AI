@@ -3,6 +3,8 @@ import os
 from dotenv import load_dotenv
 from google import genai
 
+from app.services.conversation_service import ConversationService
+
 load_dotenv()
 
 
@@ -14,12 +16,16 @@ class LLMService:
             raise ValueError("GEMINI_API_KEY not found.")
 
         self.client = genai.Client(api_key=api_key)
+        self.conversation = ConversationService()
 
     def generate_reply(self, message: str) -> str:
-        try:
-            response = self.client.models.generate_content(
-                model="gemini-2.5-flash",
-                contents=f"""
+
+        # Save user message
+        self.conversation.add_user_message(message)
+
+        history = self.conversation.build_prompt()
+
+        prompt = f"""
 You are CareerPilot AI.
 
 You are a professional career mentor.
@@ -33,14 +39,30 @@ Help users with:
 - College placements
 - Motivation
 
-Be practical, concise and encouraging.
+Always remember the previous conversation.
 
-User:
-{message}
-""",
+Conversation so far:
+
+{history}
+
+Assistant:
+"""
+
+        try:
+            response = self.client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=prompt,
             )
 
-            return response.text
+            reply = response.text
+
+            # Save AI response
+            self.conversation.add_ai_message(reply)
+
+            return reply
 
         except Exception as e:
-            return f"Gemini Error: {str(e)}"
+            return f"Gemini Error: {e}"
+
+    def clear_history(self):
+        self.conversation.clear()
