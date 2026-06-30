@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 import '../models/chat_message.dart';
 
@@ -12,7 +13,7 @@ class ChatBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isUser = message.isUser;
+    final isUser = message.sender == MessageSender.user;
 
     return Align(
       alignment:
@@ -20,19 +21,24 @@ class ChatBubble extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 6),
         padding: const EdgeInsets.all(14),
-        constraints: const BoxConstraints(maxWidth: 300),
+        constraints: const BoxConstraints(maxWidth: 320),
         decoration: BoxDecoration(
           color: isUser
-              ? Theme.of(context).colorScheme.primary
+              ? Colors.blue
               : Colors.grey.shade200,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(18),
         ),
-        child: Text(
-          message.message,
-          style: TextStyle(
-            color: isUser ? Colors.white : Colors.black87,
-          ),
-        ),
+        child: isUser
+            ? Text(
+                message.message,
+                style: const TextStyle(
+                  color: Colors.white,
+                ),
+              )
+            : MarkdownBody(
+                data: message.message,
+                selectable: true,
+              ),
       ),
     );
   }

@@ -15,6 +15,8 @@ class AiChatScreen extends StatefulWidget {
 
 class _AiChatScreenState extends State<AiChatScreen> {
   final TextEditingController _controller = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+
   final ChatService _chatService = ChatService();
 
   bool _isLoading = false;
@@ -27,13 +29,34 @@ class _AiChatScreenState extends State<AiChatScreen> {
     ),
   ];
 
+  @override
+  void dispose() {
+    _controller.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 350),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
   Future<void> _sendMessage(String text) async {
     if (text.trim().isEmpty || _isLoading) return;
+
+    final userMessage = text.trim();
 
     setState(() {
       _messages.add(
         ChatMessage(
-          message: text,
+          message: userMessage,
           sender: MessageSender.user,
           timestamp: DateTime.now(),
         ),
@@ -43,10 +66,9 @@ class _AiChatScreenState extends State<AiChatScreen> {
     });
 
     _controller.clear();
+    _scrollToBottom();
 
-    final reply = await _chatService.sendMessage(text);
-
-    if (!mounted) return;
+    final reply = await _chatService.sendMessage(userMessage);
 
     setState(() {
       _messages.add(
@@ -59,12 +81,8 @@ class _AiChatScreenState extends State<AiChatScreen> {
 
       _isLoading = false;
     });
-  }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+    _scrollToBottom();
   }
 
   @override
@@ -90,12 +108,12 @@ class _AiChatScreenState extends State<AiChatScreen> {
                 const SizedBox(width: 8),
                 SuggestionChip(
                   label: "Mock Interview",
-                  onTap: () => _sendMessage("Mock interview"),
+                  onTap: () => _sendMessage("Conduct a mock interview"),
                 ),
                 const SizedBox(width: 8),
                 SuggestionChip(
                   label: "Career Roadmap",
-                  onTap: () => _sendMessage("Create career roadmap"),
+                  onTap: () => _sendMessage("Create a career roadmap"),
                 ),
               ],
             ),
@@ -105,33 +123,48 @@ class _AiChatScreenState extends State<AiChatScreen> {
 
           Expanded(
             child: ListView.builder(
+              controller: _scrollController,
               padding: const EdgeInsets.all(12),
               itemCount: _messages.length + (_isLoading ? 1 : 0),
               itemBuilder: (context, index) {
                 if (_isLoading && index == _messages.length) {
-                  return const Padding(
-                    padding: EdgeInsets.all(12),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        ),
-                        SizedBox(width: 12),
-                        Text("CareerPilot AI is thinking..."),
-                      ],
+                  return Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 8),
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(18),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: const [
+                          SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                            ),
+                          ),
+                          SizedBox(width: 12),
+                          Text("CareerPilot AI is thinking..."),
+                        ],
+                      ),
                     ),
                   );
                 }
 
-                return ChatBubble(message: _messages[index]);
+                return ChatBubble(
+                  message: _messages[index],
+                );
               },
             ),
           ),
 
           MessageInput(
             controller: _controller,
+            enabled: !_isLoading,
             onSend: () => _sendMessage(_controller.text),
           ),
         ],
