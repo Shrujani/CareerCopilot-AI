@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/routes/app_routes.dart';
 import 'widgets/auth_button.dart';
 import 'widgets/auth_text_field.dart';
 import 'widgets/password_field.dart';
@@ -27,8 +28,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _login() {
     if (_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Login functionality coming soon")),
+      Navigator.pushReplacementNamed(
+        context,
+        AppRoutes.dashboard,
       );
     }
   }
@@ -36,7 +38,10 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Login"), centerTitle: true),
+      appBar: AppBar(
+        title: const Text("Login"),
+        centerTitle: true,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -69,25 +74,37 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 20),
 
-                PasswordField(controller: _passwordController),
+                PasswordField(
+                  controller: _passwordController,
+                ),
 
-                const SizedBox(height: 12),
+                const SizedBox(height: 8),
 
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context,
+                        AppRoutes.forgotPassword,
+                      );
+                    },
                     child: const Text("Forgot Password?"),
                   ),
                 ),
 
                 const SizedBox(height: 20),
 
-                AuthButton(text: "Login", onPressed: _login),
+                AuthButton(
+                  text: "Login",
+                  onPressed: _login,
+                ),
 
                 const SizedBox(height: 30),
 
-                const Center(child: Text("OR")),
+                const Center(
+                  child: Text("OR"),
+                ),
 
                 const SizedBox(height: 20),
 
@@ -110,9 +127,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Don't have an account? "),
+                    const Text("Don't have an account?"),
 
-                    TextButton(onPressed: () {}, child: const Text("Register")),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushNamed(
+                          context,
+                          AppRoutes.register,
+                        );
+                      },
+                      child: const Text(" Register"),
+                    ),
                   ],
                 ),
               ],
