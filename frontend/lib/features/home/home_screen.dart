@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../ai_chat/ai_chat_screen.dart';
 import '../dashboard/dashboard_screen.dart';
 import 'widgets/bottom_nav_bar.dart';
 
@@ -13,17 +14,14 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = const [
-    DashboardScreen(),
-    _PlaceholderScreen(
-      title: "AI Mentor",
-      icon: Icons.smart_toy,
-    ),
-    _PlaceholderScreen(
+  late final List<Widget> _screens = [
+    const DashboardScreen(),
+    const AiChatScreen(),
+    const _PlaceholderScreen(
       title: "Progress",
       icon: Icons.analytics,
     ),
-    _PlaceholderScreen(
+    const _PlaceholderScreen(
       title: "Profile",
       icon: Icons.person,
     ),
@@ -57,23 +55,15 @@ class _PlaceholderScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: Text(title), centerTitle: true),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              size: 80,
-              color: Theme.of(context).colorScheme.primary,
-            ),
+            Icon(icon, size: 80),
             const SizedBox(height: 20),
             Text(
-              "$title Module\nComing Soon",
-              textAlign: TextAlign.center,
+              "$title Coming Soon",
               style: Theme.of(context).textTheme.headlineSmall,
             ),
           ],
