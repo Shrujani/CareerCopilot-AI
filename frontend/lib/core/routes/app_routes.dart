@@ -7,4 +7,8 @@ class AppRoutes {
   static const String forgotPassword = '/forgot-password';
 
   static const String dashboard = '/dashboard';
+
+  static const String aiChat = '/ai-chat';
+
+  static const String resumeAnalyzer = '/resume-analyzer';
 }

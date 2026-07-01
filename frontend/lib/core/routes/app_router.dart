@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../../features/ai_chat/ai_chat_screen.dart';
 import '../../features/authentication/forgot_password_screen.dart';
 import '../../features/authentication/login_screen.dart';
 import '../../features/authentication/register_screen.dart';
-import '../../features/home/home_screen.dart';
+import '../../features/dashboard/dashboard_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
+import '../../features/resume_analyzer/resume_upload_screen.dart';
 import '../../features/splash/welcome_screen.dart';
 import 'app_routes.dart';
 
@@ -38,7 +40,17 @@ class AppRouter {
 
       case AppRoutes.dashboard:
         return MaterialPageRoute(
-          builder: (_) => const HomeScreen(),
+          builder: (_) => const DashboardScreen(),
+        );
+
+      case AppRoutes.aiChat:
+        return MaterialPageRoute(
+          builder: (_) => const AiChatScreen(),
+        );
+
+      case AppRoutes.resumeAnalyzer:
+        return MaterialPageRoute(
+          builder: (_) => const ResumeUploadScreen(),
         );
 
       default:

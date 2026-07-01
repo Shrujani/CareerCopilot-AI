@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../core/widgets/primary_button.dart';
+
 class AppButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
@@ -8,10 +10,9 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 52,
-      child: ElevatedButton(onPressed: onPressed, child: Text(text)),
+    return PrimaryButton(
+      text: text,
+      onPressed: onPressed,
     );
   }
 }

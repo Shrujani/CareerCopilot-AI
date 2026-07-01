@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/widgets/primary_button.dart';
+
 class AuthButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
@@ -8,16 +10,9 @@ class AuthButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 55,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        child: Text(
-          text,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-      ),
+    return PrimaryButton(
+      text: text,
+      onPressed: onPressed,
     );
   }
 }

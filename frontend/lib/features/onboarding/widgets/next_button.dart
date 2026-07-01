@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/widgets/primary_button.dart';
+
 class NextButton extends StatelessWidget {
   final VoidCallback onPressed;
   final bool isLastPage;
@@ -12,16 +14,9 @@ class NextButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 55,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        child: Text(
-          isLastPage ? 'Get Started' : 'Next',
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-      ),
+    return PrimaryButton(
+      text: isLastPage ? 'Get Started' : 'Next',
+      onPressed: onPressed,
     );
   }
 }
