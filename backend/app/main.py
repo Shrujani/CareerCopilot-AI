@@ -6,6 +6,7 @@ from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.routes.chat import router as chat_router
+from app.routes.interview import router as interview_router
 from app.routes.resume import router as resume_router
 
 logging.basicConfig(level=logging.INFO)
@@ -19,6 +20,7 @@ app = FastAPI(
 
 # Register routers
 app.include_router(chat_router)
+app.include_router(interview_router)
 app.include_router(resume_router)
 
 
